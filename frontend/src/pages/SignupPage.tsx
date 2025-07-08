@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import axios from 'axios';
+import api from '../api';
 import styles from './SignupPage.module.css';
 
 interface SignupFormInputs {
@@ -39,7 +39,7 @@ const SignupPage: React.FC = () => {
     setApiError('');
     setLoading(true);
     try {
-      const res = await axios.post('/api/auth/register', data);
+      const res = await api.post('/api/auth/register', data);
       setEmailForOtp(data.email);
       setStep('otp');
     } catch (err: any) {
@@ -54,7 +54,7 @@ const SignupPage: React.FC = () => {
     setApiError('');
     setLoading(true);
     try {
-      const res = await axios.post('/api/auth/verify-otp', data);
+      const res = await api.post('/api/auth/verify-otp', data);
       // Save token (localStorage for demo; use httpOnly cookie in production)
       localStorage.setItem('token', res.data.token);
       window.location.href = '/dashboard';

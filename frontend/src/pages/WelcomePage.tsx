@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 
 interface UserInfo {
   id: string;
@@ -20,7 +20,7 @@ const WelcomePage: React.FC = () => {
         return;
       }
       try {
-        const res = await axios.get('/api/auth/me', {
+        const res = await api.get('/api/auth/me', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUser(res.data.user);

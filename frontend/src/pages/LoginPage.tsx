@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import axios from 'axios';
+import api from '../api';
 import styles from './LoginPage.module.css';
 import { GoogleLogin, googleLogout, CredentialResponse } from '@react-oauth/google';
 
@@ -30,7 +30,7 @@ const LoginPage: React.FC = () => {
     e.preventDefault();
     setMessage('');
     try {
-      const res = await axios.post('/api/auth/login', { email, password });
+      const res = await api.post('/api/auth/login', { email, password });
       setMessage(res.data.message);
       setStep('otp');
     } catch (err: any) {
@@ -43,7 +43,7 @@ const LoginPage: React.FC = () => {
     e.preventDefault();
     setMessage('');
     try {
-      const res = await axios.post('/api/auth/verify-otp', { email, otp });
+      const res = await api.post('/api/auth/verify-otp', { email, otp });
       setMessage(res.data.message);
       setToken(res.data.token);
       localStorage.setItem('token', res.data.token);
@@ -62,7 +62,7 @@ const LoginPage: React.FC = () => {
       const { credential } = credentialResponse;
       if (!credential) throw new Error('No Google credential');
       // Send credential to backend for verification and login/signup
-      const res = await axios.post('/api/auth/google', { credential });
+      const res = await api.post('/api/auth/google', { credential });
       localStorage.setItem('token', res.data.token);
       window.location.href = '/dashboard';
     } catch (err: any) {

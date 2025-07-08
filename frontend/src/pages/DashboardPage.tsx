@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { useNavigate } from 'react-router-dom';
 
 interface UserInfo {
@@ -53,8 +53,8 @@ const DashboardPage: React.FC = () => {
     setError('');
     try {
       const [userRes, notesRes] = await Promise.all([
-        axios.get('/api/auth/me', { headers: { Authorization: `Bearer ${token}` } }),
-        axios.get('/api/notes', { headers: { Authorization: `Bearer ${token}` } }),
+        api.get('/api/auth/me', { headers: { Authorization: `Bearer ${token}` } }),
+        api.get('/api/notes', { headers: { Authorization: `Bearer ${token}` } }),
       ]);
       setUser(userRes.data.user);
       setNotes(notesRes.data);
@@ -80,7 +80,7 @@ const DashboardPage: React.FC = () => {
     setCreating(true);
     setError('');
     try {
-      const res = await axios.post(
+      const res = await api.post(
         '/api/notes',
         { title: noteTitle, content: noteContent },
         { headers: { Authorization: `Bearer ${token}` } }
@@ -99,7 +99,7 @@ const DashboardPage: React.FC = () => {
     setDeletingId(id);
     setError('');
     try {
-      await axios.delete(`/api/notes/${id}`, {
+      await api.delete(`/api/notes/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setNotes(notes.filter((note) => note._id !== id));
@@ -126,7 +126,7 @@ const DashboardPage: React.FC = () => {
     if (!editTitle.trim() || !editContent.trim()) return;
     setError('');
     try {
-      const res = await axios.put(
+      const res = await api.put(
         `/api/notes/${id}`,
         { title: editTitle, content: editContent },
         { headers: { Authorization: `Bearer ${token}` } }
