@@ -192,9 +192,55 @@ const DashboardPage: React.FC = () => {
         ) : (
           <ul style={{ listStyle: 'none', padding: 0 }}>
             {notes.map(note => (
-              <li key={note._id} style={{ marginBottom: 16, padding: 16, background: '#f9f9f9', borderRadius: 8, boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
-                <div style={{ fontWeight: 600, fontSize: 18 }}>{note.title}</div>
-                <div style={{ color: '#666', marginTop: 4 }}>{note.content.slice(0, 80)}{note.content.length > 80 ? '...' : ''}</div>
+              <li key={note._id} style={{ marginBottom: 16, padding: 16, background: '#f9f9f9', borderRadius: 8, boxShadow: '0 1px 4px rgba(0,0,0,0.04)', position: 'relative' }}>
+                {editingId === note._id ? (
+                  <>
+                    <input
+                      value={editTitle}
+                      onChange={e => setEditTitle(e.target.value)}
+                      style={{ width: '100%', marginBottom: 8, padding: '0.5rem', fontSize: 16, borderRadius: 6, border: '1px solid #ccc' }}
+                      maxLength={100}
+                    />
+                    <textarea
+                      value={editContent}
+                      onChange={e => setEditContent(e.target.value)}
+                      style={{ width: '100%', marginBottom: 8, padding: '0.5rem', fontSize: 16, borderRadius: 6, border: '1px solid #ccc', minHeight: 60 }}
+                    />
+                    <div style={{ display: 'flex', gap: 8 }}>
+                      <button
+                        onClick={() => handleSaveEdit(note._id)}
+                        disabled={!editTitle.trim() || !editContent.trim()}
+                        style={{ background: '#FFD600', color: '#222', border: 'none', borderRadius: 6, padding: '0.4rem 0.8rem', fontSize: 16, fontWeight: 500, cursor: !editTitle.trim() || !editContent.trim() ? 'not-allowed' : 'pointer' }}
+                      >
+                        Save
+                      </button>
+                      <button
+                        onClick={cancelEdit}
+                        style={{ background: '#bdbdbd', color: '#fff', border: 'none', borderRadius: 6, padding: '0.4rem 0.8rem', fontSize: 16, fontWeight: 500, cursor: 'pointer' }}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div style={{ fontWeight: 600, fontSize: 18 }}>{note.title}</div>
+                    <div style={{ color: '#666', marginTop: 4 }}>{note.content.slice(0, 80)}{note.content.length > 80 ? '...' : ''}</div>
+                    <button
+                      onClick={() => startEdit(note)}
+                      style={{ position: 'absolute', top: 16, right: 90, background: '#1976d2', color: '#fff', border: 'none', borderRadius: 6, padding: '0.4rem 0.8rem', fontSize: 16, fontWeight: 500, cursor: 'pointer' }}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteNote(note._id)}
+                      disabled={deletingId === note._id}
+                      style={{ position: 'absolute', top: 16, right: 16, background: '#e53935', color: '#fff', border: 'none', borderRadius: 6, padding: '0.4rem 0.8rem', fontSize: 16, fontWeight: 500, cursor: deletingId === note._id ? 'not-allowed' : 'pointer' }}
+                    >
+                      {deletingId === note._id ? 'Deleting...' : 'Delete'}
+                    </button>
+                  </>
+                )}
               </li>
             ))}
           </ul>
